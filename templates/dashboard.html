@@ -1,0 +1,981 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Defence Tech | Maintenance Dashboard</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: #091321;
+            color: #edf4ff;
+            min-height: 100vh;
+        }
+
+        .dashboard {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* SIDEBAR */
+
+        .sidebar {
+            width: 245px;
+            background: #0d1b2d;
+            border-right: 1px solid #20334c;
+            padding: 28px 18px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0 8px 30px;
+            border-bottom: 1px solid #24354b;
+        }
+
+        .brand-icon {
+            width: 43px;
+            height: 43px;
+            background: linear-gradient(135deg, #00d4ff, #0876d9);
+            border-radius: 12px;
+            display: grid;
+            place-items: center;
+            color: #071525;
+            font-size: 23px;
+            font-weight: bold;
+            box-shadow: 0 0 22px #00d4ff30;
+        }
+
+        .brand h2 {
+            font-size: 17px;
+            letter-spacing: 1px;
+        }
+
+        .brand p {
+            color: #8195b1;
+            font-size: 10px;
+            margin-top: 4px;
+            letter-spacing: 1.3px;
+        }
+
+        .menu-title {
+            color: #617895;
+            font-size: 10px;
+            letter-spacing: 2px;
+            margin: 30px 10px 13px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            text-decoration: none;
+            color: #9eb0c8;
+            padding: 14px 13px;
+            border-radius: 10px;
+            margin-bottom: 7px;
+            transition: 0.25s;
+            font-size: 14px;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: #52e4ff;
+            background: linear-gradient(90deg, #0b3550, #102b43);
+            border: 1px solid #145171;
+        }
+
+        .nav-icon {
+            font-size: 19px;
+            width: 23px;
+            text-align: center;
+        }
+
+        .sidebar-bottom {
+            margin-top: auto;
+            padding-top: 22px;
+        }
+
+        .system-status {
+            background: #11263a;
+            border: 1px solid #23435b;
+            border-radius: 12px;
+            padding: 15px;
+        }
+
+        .status-line {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: #c9d9e9;
+        }
+
+        .status-dot {
+            height: 8px;
+            width: 8px;
+            background: #31e6a0;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #31e6a0;
+        }
+
+        .system-status p {
+            color: #7189a6;
+            font-size: 11px;
+            margin-top: 10px;
+        }
+
+        /* MAIN CONTENT */
+
+        .main {
+            flex: 1;
+            min-width: 0;
+            padding: 30px 36px;
+        }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            flex-wrap: wrap;
+            padding-bottom: 25px;
+            border-bottom: 1px solid #1c3048;
+        }
+
+        .breadcrumb {
+            color: #6f86a3;
+            font-size: 12px;
+            margin-bottom: 9px;
+        }
+
+        .breadcrumb span {
+            color: #43dfff;
+        }
+
+        .topbar h1 {
+            font-size: clamp(23px, 3vw, 32px);
+            font-weight: 650;
+            letter-spacing: -0.5px;
+        }
+
+        .topbar h1 span {
+            color: #4bdfff;
+        }
+
+        .topbar p {
+            color: #8196b1;
+            font-size: 13px;
+            margin-top: 8px;
+        }
+
+        .top-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .live-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid #24513f;
+            background: #102b27;
+            color: #54e6aa;
+            border-radius: 30px;
+            padding: 10px 14px;
+            font-size: 11px;
+            letter-spacing: 1px;
+        }
+
+        .date-box {
+            background: #122239;
+            border: 1px solid #253a54;
+            color: #c7d7e9;
+            padding: 10px 13px;
+            border-radius: 9px;
+            font-size: 12px;
+        }
+
+        /* WELCOME BANNER */
+
+        .welcome-banner {
+            margin-top: 27px;
+            padding: 28px 30px;
+            border-radius: 17px;
+            border: 1px solid #15516b;
+            background:
+                radial-gradient(ellipse at 85% 20%, #0875a53b, transparent 42%),
+                linear-gradient(115deg, #10243a, #102d43 55%, #102039);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .welcome-banner:after {
+            content: "⬡";
+            position: absolute;
+            right: 35px;
+            top: -46px;
+            font-size: 185px;
+            color: #49dfff0b;
+            pointer-events: none;
+        }
+
+        .eyebrow {
+            display: inline-block;
+            color: #52dfff;
+            font-size: 10px;
+            letter-spacing: 2px;
+            border: 1px solid #20627b;
+            background: #10374b;
+            padding: 7px 10px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+
+        .welcome-banner h2 {
+            font-size: 23px;
+            margin-bottom: 9px;
+        }
+
+        .welcome-banner p {
+            color: #9ab1ca;
+            font-size: 13px;
+            line-height: 1.8;
+            max-width: 590px;
+        }
+
+        /* STATISTICS */
+
+        .section-heading {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin: 32px 0 17px;
+        }
+
+        .section-heading h2 {
+            font-size: 17px;
+            font-weight: 600;
+        }
+
+        .section-heading p {
+            color: #7389a4;
+            font-size: 11px;
+            margin-top: 5px;
+        }
+
+        .section-label {
+            color: #56dfff;
+            font-size: 10px;
+            letter-spacing: 1.5px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 17px;
+        }
+
+        .stat-card {
+            background: linear-gradient(145deg, #14263c, #101d30);
+            border: 1px solid #243750;
+            border-radius: 14px;
+            padding: 21px 19px;
+            min-width: 0;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.25s, border-color 0.25s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            border-color: #3386a8;
+        }
+
+        .stat-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .stat-icon {
+            width: 43px;
+            height: 43px;
+            border-radius: 11px;
+            display: grid;
+            place-items: center;
+            font-size: 21px;
+        }
+
+        .icon-blue {
+            color: #5bdfff;
+            background: #153c53;
+        }
+
+        .icon-orange {
+            color: #ffb86c;
+            background: #493322;
+        }
+
+        .icon-green {
+            color: #55e7a6;
+            background: #153e35;
+        }
+
+        .icon-purple {
+            color: #c5a4ff;
+            background: #30284b;
+        }
+
+        .stat-tag {
+            color: #8298b4;
+            font-size: 10px;
+            background: #1a2d43;
+            padding: 6px 8px;
+            border-radius: 6px;
+        }
+
+        .stat-card h3 {
+            color: #9aacc2;
+            font-size: 12px;
+            font-weight: 500;
+            margin-top: 20px;
+        }
+
+        .stat-number {
+            font-size: 32px;
+            font-weight: 700;
+            margin-top: 7px;
+            letter-spacing: -1px;
+        }
+
+        .stat-footer {
+            color: #7087a2;
+            font-size: 11px;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #24344a;
+        }
+
+        .stat-footer span {
+            color: #52dfff;
+        }
+
+        /* BOTTOM PANELS */
+
+        .bottom-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 18px;
+            margin-top: 23px;
+        }
+
+        .panel {
+            background: #111f32;
+            border: 1px solid #24364e;
+            border-radius: 14px;
+            padding: 22px;
+            min-width: 0;
+        }
+
+        .panel-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 22px;
+        }
+
+        .panel-heading h3 {
+            font-size: 15px;
+        }
+
+        .panel-heading p {
+            color: #778da9;
+            font-size: 11px;
+            margin-top: 6px;
+        }
+
+        .status-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .status-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 12px;
+            color: #c2d1e3;
+        }
+
+        .status-square {
+            width: 9px;
+            height: 9px;
+            border-radius: 3px;
+        }
+
+        .normal-square {
+            background: #43e3a3;
+        }
+
+        .maintenance-square {
+            background: #ffad68;
+        }
+
+        .status-count {
+            color: #e8f2ff;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .progress-track {
+            height: 8px;
+            background: #26364b;
+            border-radius: 20px;
+            overflow: hidden;
+            margin-top: -11px;
+            margin-bottom: 19px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 20px;
+            transition: width 0.5s ease;
+        }
+
+        .normal-fill {
+            background: linear-gradient(90deg, #20b981, #4be7b0);
+        }
+
+        .maintenance-fill {
+            background: linear-gradient(90deg, #e88738, #ffc078);
+        }
+
+        .accuracy-box {
+            background: linear-gradient(135deg, #182c46, #16253c);
+            border: 1px solid #2c4260;
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 17px;
+        }
+
+        .accuracy-ring {
+            width: 76px;
+            height: 76px;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            flex-shrink: 0;
+            background: conic-gradient(
+                #46dfff {{ accuracy }}%,
+                #2a3b52 0
+            );
+            position: relative;
+        }
+
+        .accuracy-ring:before {
+            content: "";
+            position: absolute;
+            inset: 6px;
+            background: #182c46;
+            border-radius: 50%;
+        }
+
+        .accuracy-ring span {
+            position: relative;
+            z-index: 1;
+            color: #f1f8ff;
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .accuracy-text h4 {
+            font-size: 14px;
+            margin-bottom: 7px;
+        }
+
+        .accuracy-text p {
+            font-size: 11px;
+            color: #91a7c1;
+            line-height: 1.7;
+        }
+
+        .notice {
+            margin-top: 17px;
+            padding: 13px 14px;
+            border: 1px solid #57452d;
+            background: #2c271e;
+            color: #e5c38d;
+            border-radius: 9px;
+            font-size: 11px;
+            line-height: 1.7;
+        }
+
+        /* QUICK ACTIONS */
+
+        .quick-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 23px;
+        }
+
+        .action-btn {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            gap: 9px;
+            text-decoration: none;
+            padding: 13px 18px;
+            border-radius: 9px;
+            font-size: 12px;
+            font-weight: 600;
+            transition: 0.25s;
+        }
+
+        .primary-btn {
+            color: #071522;
+            background: linear-gradient(100deg, #4be2ff, #49b7ff);
+            box-shadow: 0 5px 20px #27b8e51c;
+        }
+
+        .primary-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 7px 24px #27b8e53b;
+        }
+
+        .secondary-btn {
+            color: #c8d9ec;
+            background: #14263b;
+            border: 1px solid #2c415c;
+        }
+
+        .secondary-btn:hover {
+            color: #50ddff;
+            border-color: #3982a3;
+        }
+
+        /* FOOTER */
+
+        .footer {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+            border-top: 1px solid #203149;
+            margin-top: 35px;
+            padding-top: 19px;
+            color: #657c98;
+            font-size: 10px;
+        }
+
+        /* RESPONSIVE DESIGN */
+
+        @media (max-width: 1100px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .main {
+                padding: 25px;
+            }
+
+            .bottom-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 700px) {
+            .dashboard {
+                display: block;
+            }
+
+            .sidebar {
+                width: 100%;
+                padding: 16px;
+            }
+
+            .brand {
+                padding-bottom: 15px;
+            }
+
+            .menu-title {
+                margin-top: 17px;
+            }
+
+            .sidebar nav {
+                display: flex;
+                gap: 7px;
+                flex-wrap: wrap;
+            }
+
+            .nav-link {
+                padding: 10px;
+                margin: 0;
+                font-size: 12px;
+            }
+
+            .sidebar-bottom {
+                display: none;
+            }
+
+            .main {
+                padding: 20px 15px;
+            }
+
+            .welcome-banner {
+                padding: 23px 20px;
+            }
+
+            .stats-grid {
+                gap: 10px;
+            }
+
+            .stat-card {
+                padding: 15px 12px;
+            }
+
+            .stat-number {
+                font-size: 27px;
+            }
+
+            .stat-tag {
+                display: none;
+            }
+
+            .stat-icon {
+                width: 37px;
+                height: 37px;
+            }
+
+            .panel {
+                padding: 17px;
+            }
+
+            .date-box {
+                display: none;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="dashboard">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+        <div class="brand">
+            <div class="brand-icon">⬡</div>
+            <div>
+                <h2>DEFENCE TECH</h2>
+                <p>MAINTENANCE SYSTEM</p>
+            </div>
+        </div>
+
+        <p class="menu-title">MAIN MENU</p>
+
+        <nav>
+            <a href="{{ url_for('dashboard') }}" class="nav-link active">
+                <span class="nav-icon">▦</span>
+                Dashboard
+            </a>
+
+            <a href="{{ url_for('home') }}" class="nav-link">
+                <span class="nav-icon">⌕</span>
+                New Prediction
+            </a>
+
+            <a href="{{ url_for('records') }}" class="nav-link">
+                <span class="nav-icon">▤</span>
+                Equipment Records
+            </a>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <div class="system-status">
+                <div class="status-line">
+                    <span class="status-dot"></span>
+                    Interface Active
+                </div>
+                <p>Predictive maintenance demo system</p>
+            </div>
+        </div>
+
+    </aside>
+
+    <!-- MAIN DASHBOARD -->
+    <main class="main">
+
+        <header class="topbar">
+            <div>
+                <div class="breadcrumb">
+                    CONTROL PANEL / <span>DASHBOARD</span>
+                </div>
+
+                <h1>Maintenance <span>Dashboard</span></h1>
+
+                <p>Monitor equipment records and maintenance predictions.</p>
+            </div>
+
+            <div class="top-actions">
+                <div class="live-badge">
+                    <span class="status-dot"></span>
+                    SYSTEM OVERVIEW
+                </div>
+
+                <div class="date-box" id="currentDate">Loading date...</div>
+            </div>
+        </header>
+
+        <!-- WELCOME BANNER -->
+        <section class="welcome-banner">
+            <div class="eyebrow">PREDICTIVE MAINTENANCE SYSTEM</div>
+
+            <h2>Welcome to Defence Tech Control Center</h2>
+
+            <p>
+                Review equipment records, examine maintenance predictions,
+                and monitor the current status of your demonstration system
+                from one central dashboard.
+            </p>
+        </section>
+
+        <!-- STATISTICS -->
+        <section>
+            <div class="section-heading">
+                <div>
+                    <h2>System Overview</h2>
+                    <p>Summary of saved equipment prediction records</p>
+                </div>
+
+                <span class="section-label">KEY METRICS</span>
+            </div>
+
+            <div class="stats-grid">
+
+                <div class="stat-card">
+                    <div class="stat-top">
+                        <div class="stat-icon icon-blue">▦</div>
+                        <span class="stat-tag">DATABASE</span>
+                    </div>
+
+                    <h3>Total Equipment Records</h3>
+                    <div class="stat-number">{{ total }}</div>
+
+                    <div class="stat-footer">
+                        <span>●</span> All saved records
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-top">
+                        <div class="stat-icon icon-orange">⚙</div>
+                        <span class="stat-tag">ATTENTION</span>
+                    </div>
+
+                    <h3>Maintenance Required</h3>
+                    <div class="stat-number">{{ maintenance_count }}</div>
+
+                    <div class="stat-footer">
+                        <span style="color:#ffb86c;">●</span>
+                        Records marked for maintenance
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-top">
+                        <div class="stat-icon icon-green">✓</div>
+                        <span class="stat-tag">NORMAL</span>
+                    </div>
+
+                    <h3>Normal Equipment</h3>
+                    <div class="stat-number">{{ normal_count }}</div>
+
+                    <div class="stat-footer">
+                        <span style="color:#55e7a6;">●</span>
+                        Records marked as normal
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-top">
+                        <div class="stat-icon icon-purple">◎</div>
+                        <span class="stat-tag">ML MODEL</span>
+                    </div>
+
+                    <h3>Model Accuracy</h3>
+                    <div class="stat-number">{{ accuracy }}<span style="font-size:17px;">%</span></div>
+
+                    <div class="stat-footer">
+                        <span style="color:#c5a4ff;">●</span>
+                        Evaluation metric
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- STATUS AND MODEL PANELS -->
+        <section class="bottom-grid">
+
+            <div class="panel">
+                <div class="panel-heading">
+                    <div>
+                        <h3>Equipment Status Overview</h3>
+                        <p>Distribution of saved prediction records</p>
+                    </div>
+
+                    <span class="section-label">STATUS</span>
+                </div>
+
+                <div class="status-row">
+                    <div class="status-info">
+                        <span class="status-square normal-square"></span>
+                        Normal Equipment
+                    </div>
+
+                    <span class="status-count">{{ normal_count }}</span>
+                </div>
+
+                <div class="progress-track">
+                    <div class="progress-fill normal-fill"
+                         style="width: {% if total|int > 0 %}{{ [((normal_count|float / total|float) * 100), 100]|min }}{% else %}0{% endif %}%;">
+                    </div>
+                </div>
+
+                <div class="status-row">
+                    <div class="status-info">
+                        <span class="status-square maintenance-square"></span>
+                        Maintenance Required
+                    </div>
+
+                    <span class="status-count">{{ maintenance_count }}</span>
+                </div>
+
+                <div class="progress-track">
+                    <div class="progress-fill maintenance-fill"
+                         style="width: {% if total|int > 0 %}{{ [((maintenance_count|float / total|float) * 100), 100]|min }}{% else %}0{% endif %}%;">
+                    </div>
+                </div>
+
+                <p style="font-size:11px;color:#778da9;line-height:1.7;">
+                    Percentages are calculated from the saved records currently
+                    available in the database.
+                </p>
+            </div>
+
+            <div class="panel">
+                <div class="panel-heading">
+                    <div>
+                        <h3>Machine Learning Model</h3>
+                        <p>Model evaluation information</p>
+                    </div>
+
+                    <span class="section-label">ML STATUS</span>
+                </div>
+
+                <div class="accuracy-box">
+                    <div class="accuracy-ring">
+                        <span>{{ accuracy }}%</span>
+                    </div>
+
+                    <div class="accuracy-text">
+                        <h4>Reported Accuracy</h4>
+                        <p>
+                            Decision Tree classifier evaluation value
+                            provided by the application.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="notice">
+                    <strong>Demo notice:</strong> Predictions are intended
+                    for academic demonstration using synthetic data.
+                    They must not be used for real equipment maintenance
+                    or operational decisions.
+                </div>
+            </div>
+
+        </section>
+
+        <!-- QUICK ACTIONS -->
+        <section>
+            <div class="section-heading">
+                <div>
+                    <h2>Quick Actions</h2>
+                    <p>Navigate to the main system features</p>
+                </div>
+            </div>
+
+            <div class="quick-actions">
+                <a href="{{ url_for('home') }}" class="action-btn primary-btn">
+                    <span>＋</span> Create New Prediction
+                </a>
+
+                <a href="{{ url_for('records') }}" class="action-btn secondary-btn">
+                    <span>▤</span> View Equipment Records
+                </a>
+            </div>
+        </section>
+
+        <!-- FOOTER -->
+        <footer class="footer">
+            <span>DEFENCE TECH · MAINTENANCE PREDICTION SYSTEM</span>
+            <span>Academic Project · Demonstration Use Only</span>
+        </footer>
+
+    </main>
+
+</div>
+
+<script>
+    function updateDate() {
+        const dateElement = document.getElementById("currentDate");
+
+        const now = new Date();
+
+        dateElement.textContent = now.toLocaleDateString("en-IN", {
+            day: "2-digit",
+            month: "short",
+            year: "numeric"
+        });
+    }
+
+    updateDate();
+</script>
+
+</body>
+</html>

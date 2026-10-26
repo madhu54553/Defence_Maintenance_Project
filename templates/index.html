@@ -1,0 +1,562 @@
+ <escape><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Defence Equipment | AI Maintenance System</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            background:
+                radial-gradient(circle at 10% 10%, rgba(14, 165, 233, 0.13), transparent 30%),
+                radial-gradient(circle at 90% 90%, rgba(34, 197, 94, 0.08), transparent 30%),
+                #07111f;
+            color: #e5edf7;
+            font-family: "Segoe UI", Arial, sans-serif;
+            padding: 24px;
+        }
+
+        .page {
+            max-width: 1150px;
+            margin: auto;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 18px;
+            padding: 15px 0 28px;
+            border-bottom: 1px solid #203047;
+            margin-bottom: 35px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+        }
+
+        .brand-icon {
+            width: 48px;
+            height: 48px;
+            display: grid;
+            place-items: center;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #0ea5e9, #2563eb);
+            font-size: 24px;
+            box-shadow: 0 8px 25px #0284c733;
+        }
+
+        .brand h2 {
+            font-size: 17px;
+            letter-spacing: 1px;
+        }
+
+        .brand p {
+            color: #8ca1bb;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            color: #c8d6e8;
+            text-decoration: none;
+            padding: 10px 15px;
+            border: 1px solid #26384f;
+            border-radius: 10px;
+            font-size: 13px;
+            transition: 0.2s;
+        }
+
+        .nav-links a:hover {
+            background: #142941;
+            border-color: #38bdf8;
+            color: #fff;
+        }
+
+        .hero {
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            gap: 28px;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #7dd3fc;
+            background: #082b40;
+            border: 1px solid #164e63;
+            border-radius: 30px;
+            padding: 8px 13px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1.3px;
+            margin-bottom: 20px;
+        }
+
+        .eyebrow span {
+            height: 7px;
+            width: 7px;
+            border-radius: 50%;
+            background: #38bdf8;
+        }
+
+        .hero h1 {
+            font-size: clamp(30px, 4vw, 47px);
+            line-height: 1.16;
+            letter-spacing: -1.3px;
+            margin-bottom: 18px;
+        }
+
+        .hero h1 strong {
+            color: #38bdf8;
+        }
+
+        .hero-text {
+            color: #9fb0c6;
+            font-size: 15px;
+            line-height: 1.8;
+            max-width: 520px;
+        }
+
+        .accuracy-card {
+            margin-top: 25px;
+            display: inline-flex;
+            align-items: center;
+            gap: 15px;
+            background: #101f31;
+            border: 1px solid #263b52;
+            padding: 15px 20px;
+            border-radius: 15px;
+        }
+
+        .accuracy-icon {
+            width: 42px;
+            height: 42px;
+            display: grid;
+            place-items: center;
+            border-radius: 12px;
+            background: #123b35;
+            color: #4ade80;
+            font-size: 21px;
+        }
+
+        .accuracy-card small {
+            display: block;
+            color: #8fa4bc;
+            font-size: 12px;
+            margin-bottom: 5px;
+        }
+
+        .accuracy-card strong {
+            font-size: 23px;
+            color: #4ade80;
+        }
+
+        .hero-visual {
+            min-height: 255px;
+            border: 1px solid #263b52;
+            border-radius: 23px;
+            background: linear-gradient(145deg, #12253a, #0b1726);
+            padding: 28px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-visual::after {
+            content: "";
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border: 1px solid #38bdf822;
+            border-radius: 50%;
+            right: -70px;
+            top: -65px;
+            box-shadow: 0 0 0 25px #38bdf80a, 0 0 0 50px #38bdf807;
+        }
+
+        .visual-symbol {
+            font-size: 57px;
+            margin-bottom: 17px;
+        }
+
+        .hero-visual h3 {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        .hero-visual p {
+            color: #9fb0c6;
+            line-height: 1.7;
+            font-size: 13px;
+            max-width: 350px;
+        }
+
+        .system-status {
+            margin-top: 22px;
+            color: #86efac;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .system-status span {
+            width: 7px;
+            height: 7px;
+            background: #4ade80;
+            border-radius: 50%;
+        }
+
+        .form-card {
+            background: #0d1a2a;
+            border: 1px solid #25384f;
+            border-radius: 22px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px #00000026;
+        }
+
+        .form-heading {
+            padding: 24px 28px;
+            border-bottom: 1px solid #24364c;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        .form-heading h2 {
+            font-size: 21px;
+            margin-bottom: 7px;
+        }
+
+        .form-heading p {
+            color: #8fa4bc;
+            font-size: 13px;
+        }
+
+        .form-badge {
+            color: #7dd3fc;
+            background: #0b2b40;
+            border: 1px solid #164e63;
+            border-radius: 9px;
+            padding: 9px 12px;
+            font-size: 11px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        form {
+            padding: 28px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 23px;
+        }
+
+        .field label {
+            display: block;
+            color: #d6e2f0;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .field label span {
+            color: #7dd3fc;
+            margin-right: 6px;
+        }
+
+        .field input {
+            width: 100%;
+            background: #081321;
+            border: 1px solid #30435a;
+            border-radius: 11px;
+            padding: 14px 15px;
+            color: #f1f5f9;
+            font-size: 14px;
+            outline: none;
+            transition: 0.2s;
+        }
+
+        .field input::placeholder {
+            color: #64768d;
+        }
+
+        .field input:focus {
+            border-color: #38bdf8;
+            box-shadow: 0 0 0 3px #38bdf81a;
+        }
+
+        .field small {
+            display: block;
+            color: #70849d;
+            margin-top: 8px;
+            font-size: 11px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            border: none;
+            border-radius: 12px;
+            margin-top: 28px;
+            padding: 16px;
+            background: linear-gradient(100deg, #0284c7, #2563eb);
+            color: white;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 8px 24px #0284c733;
+            transition: 0.2s;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px #0284c744;
+        }
+
+        .result {
+            margin: 0 28px 25px;
+            padding: 20px;
+            border-radius: 13px;
+            background: #102b28;
+            border: 1px solid #216451;
+        }
+
+        .result-label {
+            color: #86efac;
+            font-size: 11px;
+            letter-spacing: 1.2px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .result-value {
+            color: #f0fdf4;
+            font-size: 23px;
+            font-weight: 700;
+        }
+
+        .result-note {
+            color: #a7c9bc;
+            font-size: 12px;
+            margin-top: 8px;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 25px 10px 5px;
+            color: #70849d;
+            font-size: 12px;
+            line-height: 1.8;
+        }
+
+        .footer strong {
+            color: #9fb0c6;
+        }
+
+        @media (max-width: 760px) {
+            body {
+                padding: 16px;
+            }
+
+            .topbar {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .hero {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-visual {
+                min-height: 220px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-heading {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            form {
+                padding: 22px;
+            }
+
+            .result {
+                margin-left: 22px;
+                margin-right: 22px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div class="page">
+
+    <header class="topbar">
+        <div class="brand">
+            <div class="brand-icon">⚙</div>
+            <div>
+                <h2>DEFENCE TECH</h2>
+                <p>Equipment Maintenance Intelligence</p>
+            </div>
+        </div>
+
+        <nav class="nav-links">
+            <a href="{{ url_for('home') }}">Home</a>
+            <a href="{{ url_for('dashboard') }}">Dashboard</a>
+            <a href="{{ url_for('records') }}">Equipment Records</a>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <div>
+            <div class="eyebrow"><span></span> AI-POWERED MONITORING SYSTEM</div>
+
+            <h1>Predict Before<br><strong>Problems Happen.</strong></h1>
+
+            <p class="hero-text">
+                Analyse equipment operating conditions using a machine-learning
+                model and estimate whether maintenance may be required.
+                Enter the equipment readings below to generate a prediction.
+            </p>
+
+            <div class="accuracy-card">
+                <div class="accuracy-icon">✓</div>
+                <div>
+                    <small>ML MODEL ACCURACY</small>
+                    <strong>{{ accuracy }}%</strong>
+                </div>
+            </div>
+        </div>
+
+        <div class="hero-visual">
+            <div class="visual-symbol">🛡️</div>
+            <h3>Equipment Intelligence</h3>
+            <p>
+                Monitor temperature, vibration and operating hours
+                to support maintenance planning.
+            </p>
+            <div class="system-status"><span></span> Prediction interface ready</div>
+        </div>
+    </section>
+
+    <section class="form-card">
+        <div class="form-heading">
+            <div>
+                <h2>Equipment Analysis</h2>
+                <p>Enter the equipment details and operating parameters.</p>
+            </div>
+            <div class="form-badge">ML PREDICTION</div>
+        </div>
+
+        <form action="/predict" method="POST">
+            <div class="form-grid">
+                <div class="field">
+                    <label for="equipment_name"><span>01</span> Equipment Name</label>
+                    <input
+                        type="text"
+                        id="equipment_name"
+                        name="equipment_name"
+                        placeholder="e.g. Hydraulic Pump"
+                        maxlength="100"
+                        required>
+                    <small>Enter the equipment identification name.</small>
+                </div>
+
+                <div class="field">
+                    <label for="temperature"><span>02</span> Temperature (°C)</label>
+                    <input
+                        type="number"
+                        id="temperature"
+                        name="temperature"
+                        placeholder="Enter temperature"
+                        step="any"
+                        min="-50"
+                        max="200"
+                        required>
+                    <small>Allowed range: -50°C to 200°C.</small>
+                </div>
+
+                <div class="field">
+                    <label for="vibration"><span>03</span> Vibration Level</label>
+                    <input
+                        type="number"
+                        id="vibration"
+                        name="vibration"
+                        placeholder="Enter vibration value"
+                        step="any"
+                        min="0"
+                        max="100"
+                        required>
+                    <small>Allowed range: 0 to 100.</small>
+                </div>
+
+                <div class="field">
+                    <label for="operating_hours"><span>04</span> Operating Hours</label>
+                    <input
+                        type="number"
+                        id="operating_hours"
+                        name="operating_hours"
+                        placeholder="Total operating hours"
+                        step="any"
+                        min="0"
+                        max="100000"
+                        required>
+                    <small>Enter accumulated operating hours.</small>
+                </div>
+            </div>
+
+            <button type="submit" class="submit-btn">
+                ⚡ &nbsp; Analyse Equipment &amp; Predict Maintenance
+            </button>
+        </form>
+
+        {% if prediction %}
+        <div class="result" aria-live="polite">
+            <div class="result-label">PREDICTION RESULT</div>
+            <div class="result-value">{{ prediction }}</div>
+            <p class="result-note">
+                This is a model-generated estimate based on the submitted readings.
+                Verify results before making any real-world maintenance decision.
+            </p>
+        </div>
+        {% endif %}
+    </section>
+
+    <footer class="footer">
+        <strong>Defence Equipment Maintenance Prediction System</strong><br>
+        Machine Learning Based Academic Project · For demonstration purposes
+    </footer>
+
+</div>
+</body>
+</html></escape>

@@ -1,0 +1,168 @@
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #eef2f3;
+    margin: 0;
+    padding: 30px;
+    color: #263238;
+}
+
+.container {
+    max-width: 550px;
+    margin: 30px auto;
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.12);
+}
+
+h1 {
+    text-align: center;
+    color: #243b35;
+    font-size: 27px;
+    margin-bottom: 10px;
+}
+
+.subtitle {
+    text-align: center;
+    color: #65716d;
+    margin-bottom: 25px;
+    line-height: 1.5;
+}
+
+label {
+    display: block;
+    margin-top: 18px;
+    font-weight: bold;
+    color: #34443e;
+}
+
+input {
+    width: 100%;
+    padding: 12px;
+    margin-top: 8px;
+    border: 1px solid #cbd5d1;
+    border-radius: 6px;
+    font-size: 15px;
+    outline: none;
+}
+
+input:focus {
+    border-color: #31594b;
+    box-shadow: 0 0 5px rgba(49, 89, 75, 0.2);
+}
+
+button,
+.records-btn {
+    display: block;
+    width: 100%;
+    margin-top: 20px;
+    padding: 14px;
+    border: none;
+    border-radius: 6px;
+    background: #31594b;
+    color: white;
+    font-size: 15px;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+button:hover,
+.records-btn:hover {
+    background: #203e33;
+}
+
+.records-btn {
+    background: #34495e;
+    margin-top: 12px;
+}
+
+.records-btn:hover {
+    background: #22313f;
+}
+
+.result {
+    margin-top: 22px;
+    padding: 16px;
+    text-align: center;
+    background: #e5f4e9;
+    color: #245b35;
+    border: 1px solid #b8dfc2;
+    border-radius: 8px;
+    font-weight: bold;
+}
+
+.page-title {
+    text-align: center;
+    color: #243b35;
+    margin: 10px 0 20px;
+}
+
+.table-container {
+    width: 100%;
+    overflow-x: auto;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+table {
+    width: 100%;
+    min-width: 850px;
+    border-collapse: collapse;
+}
+
+th,
+td {
+    padding: 13px;
+    border: 1px solid #d5dcd9;
+    text-align: center;
+}
+
+th {
+    background: #31594b;
+    color: white;
+}
+
+tr:nth-child(even) {
+    background: #f3f6f5;
+}
+
+.back-link {
+    display: inline-block;
+    margin: 15px 0 20px;
+    color: #245b49;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.back-link:hover {
+    text-decoration: underline;
+}
+
+.empty-message {
+    text-align: center;
+    color: #65716d;
+    padding: 20px;
+}
+
+@media (max-width: 600px) {
+    body {
+        padding: 12px;
+    }
+
+    .container {
+        margin: 15px auto;
+        padding: 20px;
+    }
+
+    h1 {
+        font-size: 23px;
+    }
+}

@@ -1,0 +1,49 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Equipment Record</title>
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="container">
+    <h1>Edit Equipment Record</h1>
+    <p class="subtitle">Update Equipment Details</p>
+
+    <form action="{{ url_for('edit_record', record_id=record.id) }}"
+          method="POST">
+
+        <label for="equipment_name">Equipment Name</label>
+        <input type="text" id="equipment_name"
+               name="equipment_name"
+               value="{{ record.equipment_name }}" required>
+
+        <label for="temperature">Temperature</label>
+        <input type="number" id="temperature"
+               name="temperature" step="any" min="0"
+               value="{{ record.temperature }}" required>
+
+        <label for="vibration">Vibration</label>
+        <input type="number" id="vibration"
+               name="vibration" step="any" min="0"
+               value="{{ record.vibration }}" required>
+
+        <label for="operating_hours">Operating Hours</label>
+        <input type="number" id="operating_hours"
+               name="operating_hours" step="any" min="0"
+               value="{{ record.operating_hours }}" required>
+
+        <button type="submit">Update Record</button>
+    </form>
+
+    <p>
+        <a href="{{ url_for('records') }}">Back to Records</a>
+    </p>
+</div>
+
+</body>
+</html>
